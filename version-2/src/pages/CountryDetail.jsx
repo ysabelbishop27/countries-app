@@ -1,56 +1,80 @@
-import { Link, useParams } from "react-router";
+import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function CountryDetail({ countriesData }) {
   const { countryCode } = useParams();
+  const [viewCount, setViewCount] = useState(0);
 
   const selectedCountry = countriesData.find(
     (country) => country.cca3 === countryCode
   );
 
+  useEffect(() => {
+    if (selectedCountry) {
+      updateViewCount();
+    }
+  }, [selectedCountry]);
+
+  async function updateViewCount() {
+    const response = await fetch("/api/increment-country-count", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        cca3: selectedCountry.cca3,
+        name: selectedCountry.name.common,
+      }),
+    });
+
+    const data = await response.json();
+    setViewCount(data.count);
+  }
+
+  async function saveCountry() {
+    await fetch("/api/save-one-country", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(selectedCountry),
+    });
+
+    alert(`${selectedCountry.name.common} saved!`);
+  }
+
   if (!selectedCountry) {
-    return (
-      <main className="detail-page">
-        <h1>Country not found</h1>
-        <Link to="/">Back Home</Link>
-      </main>
-    );
+    return <h1>Country not found</h1>;
   }
 
   return (
     <main className="detail-page">
       <Link to="/" className="back-button">
-        ← Back
+        Back
       </Link>
 
       <section className="detail-card">
         <img
-          src={selectedCountry.flags.png}
-          alt={
-            selectedCountry.flags.alt ||
-            `${selectedCountry.name.common} flag`
-          }
           className="detail-flag"
+          src={selectedCountry.flags.png}
+          alt={selectedCountry.name.common}
         />
 
         <div className="detail-info">
           <h1>{selectedCountry.name.common}</h1>
 
-          <p>
-            <span>Population:</span>{" "}
-            {selectedCountry.population.toLocaleString()}
-          </p>
+          <button onClick={saveCountry}>Save</button>
+
+          <p>Population: {selectedCountry.population.toLocaleString()}</p>
+          <p>Capital: {selectedCountry.capital?.[0] || "N/A"}</p>
+          <p>Region: {selectedCountry.region}</p>
+          <p>Viewed: {viewCount} times</p>
 
           <p>
-            <span>Region:</span> {selectedCountry.region}
-          </p>
-
-          <p>
-            <span>Capital:</span>{" "}
-            {selectedCountry.capital?.[0] || "N/A"}
-          </p>
-
-          <p>
-            <span>Country Code:</span> {selectedCountry.cca3}
+            Bordering countries:{" "}
+            {selectedCountry.borders?.length
+              ? selectedCountry.borders.join(", ")
+              : "None"}
           </p>
         </div>
       </section>

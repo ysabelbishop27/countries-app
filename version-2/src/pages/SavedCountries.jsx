@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import CountryCard from "../components/CountryCard";
 
-function SavedCountries({ countriesData }) {
+function SavedCountries() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -8,78 +9,93 @@ function SavedCountries({ countriesData }) {
     bio: "",
   });
 
-  function handleChange(event) {
-    const { name, value } = event.target;
+  const [user, setUser] = useState(null);
+  const [savedCountries, setSavedCountries] = useState([]);
 
-    setFormData((previousData) => ({
-      ...previousData,
-      [name]: value,
-    }));
+  useEffect(() => {
+    getNewestUser();
+    getSavedCountries();
+  }, []);
+
+  async function getNewestUser() {
+    const response = await fetch("/api/get-newest-user");
+    const data = await response.json();
+    setUser(data);
   }
 
-  function handleSubmit(event) {
+  async function getSavedCountries() {
+    const response = await fetch("/api/get-all-saved-countries");
+    const data = await response.json();
+    setSavedCountries(data);
+  }
+
+  function handleChange(event) {
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value,
+    });
+  }
+
+  async function handleSubmit(event) {
     event.preventDefault();
-    console.log("Submitted profile:", formData);
+
+    const response = await fetch("/api/save-user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await response.json();
+    setUser(data);
   }
 
   return (
     <main className="saved-page">
+      {user && <h1>Welcome, {user.name}!</h1>}
+
       <form className="profile-form" onSubmit={handleSubmit}>
-        <h1>Save Your Profile</h1>
+        <h2>Your Profile</h2>
 
-        <label>
-          Name
-          <input
-            name="name"
-            type="text"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-        </label>
+        <input
+          name="name"
+          placeholder="Name"
+          value={formData.name}
+          onChange={handleChange}
+        />
 
-        <label>
-          Email
-          <input
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </label>
+        <input
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+        />
 
-        <label>
-          Country
-          <select
-            name="country"
-            value={formData.country}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select a country</option>
+        <input
+          name="country"
+          placeholder="Country"
+          value={formData.country}
+          onChange={handleChange}
+        />
 
-            {countriesData.map((country) => (
-              <option key={country.cca3} value={country.name.common}>
-                {country.name.common}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label>
-          Bio
-          <textarea
-            name="bio"
-            value={formData.bio}
-            onChange={handleChange}
-            rows="5"
-            required
-          />
-        </label>
+        <textarea
+          name="bio"
+          placeholder="Bio"
+          value={formData.bio}
+          onChange={handleChange}
+        />
 
         <button type="submit">Submit</button>
       </form>
+
+      <h2 className="saved-title">Saved Countries</h2>
+
+      <section className="countries-grid">
+        {savedCountries.map((country) => (
+          <CountryCard key={country.cca3} country={country} />
+        ))}
+      </section>
     </main>
   );
 }
