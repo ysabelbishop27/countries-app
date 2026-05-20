@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import { Routes, Route, Link } from "react-router";
+import { Routes, Route, Link } from "react-router-dom";
 
 import Home from "./pages/Home";
 import SavedCountries from "./pages/SavedCountries";

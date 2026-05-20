@@ -1,4 +1,4 @@
-import CountryCard from "../components/CountryCard";
+import CountryCard from "../../version-0/components/CountryCard";
 
 function Home({ countriesData }) {
   return (

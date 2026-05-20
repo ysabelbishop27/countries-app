@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import SavedCountries from "./pages/SavedCountries";
 import CountryDetail from "./pages/CountryDetail";
 
-import dataFromLocalFile from "..//localData.js";
+import dataFromLocalFile from "./localData.js";
 
 function App() {
   return (
