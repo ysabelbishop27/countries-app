@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import CountryCard from "../components/CountryCard";
 
 function SavedCountries() {
+  // Saves  the values the user types into the profile form.
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -9,52 +10,84 @@ function SavedCountries() {
     bio: "",
   });
 
+  // gets the newest user returned from the backend.
+  // If this exists, we show "Welcome, [name]!" on the page.
   const [user, setUser] = useState(null);
+
+  // gets the list of countries the user has saved.
   const [savedCountries, setSavedCountries] = useState([]);
 
+  // Runs once when the Saved Countries page first loads.
+  // It gets the newest user and all saved countries from the backend.
   useEffect(() => {
     getNewestUser();
     getSavedCountries();
   }, []);
 
+  // Gets the most recently submitted user profile from the backend.
   async function getNewestUser() {
-    const response = await fetch("/api/get-newest-user");
-    const data = await response.json();
-    setUser(data);
+    try {
+      const response = await fetch("/api/get-newest-user");
+      const userData = await response.json();
+
+      setUser(userData);
+    } catch (error) {
+      console.log("Could not get newest user:", error);
+    }
   }
 
+  // Gets all saved countries from the backend.
   async function getSavedCountries() {
-    const response = await fetch("/api/get-all-saved-countries");
-    const data = await response.json();
-    setSavedCountries(data);
+    try {
+      const response = await fetch("/api/get-all-saved-countries");
+      const countriesData = await response.json();
+
+      setSavedCountries(countriesData);
+    } catch (error) {
+      console.log("Could not get saved countries:", error);
+    }
   }
 
+  // Updates the correct form field whenever the user types.
   function handleChange(event) {
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value,
+    const { name, value } = event.target;
+
+    setFormData((previousFormData) => {
+      return {
+        ...previousFormData,
+        [name]: value,
+      };
     });
   }
 
+  // Sends the completed profile form to the backend.
   async function handleSubmit(event) {
     event.preventDefault();
 
-    const response = await fetch("/api/save-user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const response = await fetch("/api/save-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    const data = await response.json();
-    setUser(data);
+      const savedUser = await response.json();
+
+      // Updates the page immediately with the new welcome message.
+      setUser(savedUser);
+    } catch (error) {
+      console.log("Could not save user:", error);
+    }
   }
 
   return (
     <main className="saved-page">
+      {/* Shows a welcome message if the backend has a saved user. */}
       {user && <h1>Welcome, {user.name}!</h1>}
 
+      {/* Profile form for saving user information to the backend. */}
       <form className="profile-form" onSubmit={handleSubmit}>
         <h2>Your Profile</h2>
 
@@ -89,6 +122,7 @@ function SavedCountries() {
         <button type="submit">Submit</button>
       </form>
 
+      {/* Saved countries section. */}
       <h2 className="saved-title">Saved Countries</h2>
 
       <section className="countries-grid">

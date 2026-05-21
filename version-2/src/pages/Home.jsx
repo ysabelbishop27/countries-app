@@ -2,20 +2,20 @@ import { useState } from "react";
 import CountryCard from "../components/CountryCard";
 
 function Home({ countriesData }) {
-  // ================= SEARCH STATE =================
+  
   const [searchText, setSearchText] = useState("");
 
-  // ================= REGION STATE =================
+ 
   const [selectedRegion, setSelectedRegion] = useState("");
 
-  // ================= FILTER COUNTRIES =================
+ 
   const filteredCountries = countriesData.filter((country) => {
     // Search filter
     const matchesSearch = country.name.common
       .toLowerCase()
       .includes(searchText.toLowerCase());
 
-    // Region filter
+   
     const matchesRegion =
       selectedRegion === ""
         ? true
@@ -26,9 +26,9 @@ function Home({ countriesData }) {
 
   return (
     <main className="home-page">
-      {/* ================= SEARCH + FILTER ================= */}
+     
       <div className="filters-row">
-        {/* SEARCH INPUT */}
+       
         <input
           className="search-input"
           type="text"
@@ -37,7 +37,7 @@ function Home({ countriesData }) {
           onChange={(event) => setSearchText(event.target.value)}
         />
 
-        {/* REGION FILTER */}
+       
         <select
           className="region-select"
           value={selectedRegion}
@@ -57,7 +57,7 @@ function Home({ countriesData }) {
         </select>
       </div>
 
-      {/* ================= COUNTRY GRID ================= */}
+      
       <section className="countries-grid">
         {filteredCountries.map((country) => (
           <CountryCard key={country.cca3} country={country} />
