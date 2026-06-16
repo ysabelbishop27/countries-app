@@ -1,0 +1,303 @@
+This is our WHAT, WHEN, WHERE, HOW framework for working with data:
+
+❓ WHAT...
+
+TYPE OF HTTP REQUEST (GET OR POST):
+POST
+
+API ENDPOINT:
+/api/add-one-user
+
+REQUEST BODY DATA TYPE (if applicable):
+Object
+
+REQUEST BODY (if applicable):
+An object with the user's profile form information:
+
+* name
+* email
+* country
+* bio
+
+Example:
+{
+name: "Ysabel Bishop",
+email: "[ysabel@example.com](mailto:ysabel@example.com)",
+country: "Mexico",
+bio: "Learning full stack development."
+}
+
+RESPONSE DATA TYPE:
+Object
+
+RESPONSE:
+The saved user object from the backend. This response can be used to update the welcome message on the page.
+
+❓ WHEN:
+When the user fills out the profile form and clicks the Submit button.
+
+❓ WHERE:
+SavedCountries.jsx
+Inside the handleSubmit function.
+
+❓ HOW:
+
+Step 1: Create useState to store the form data: name, email, country, and bio.
+
+Step 2: Create a handleChange function that updates the correct form field when the user types or selects an option.
+
+Step 3: Create a handleSubmit function that runs when the form is submitted.
+
+Step 4: Inside handleSubmit, prevent the page from refreshing.
+
+Step 5: Send a POST request to /api/add-one-user.
+
+Step 6: Send the formData object in the request body.
+
+Step 7: Convert the response into JavaScript data using response.json().
+
+Step 8: Save the returned user data in state so the page can show “Welcome back, [user name]!”
+
+Step 9: Clear the form after the user submits it.
+
+❓ WHAT...
+
+TYPE OF HTTP REQUEST (GET OR POST):
+GET
+
+API ENDPOINT:
+/api/get-newest-user
+
+REQUEST BODY DATA TYPE (if applicable):
+Not applicable
+
+REQUEST BODY (if applicable):
+No request body is needed because this is a GET request.
+
+RESPONSE DATA TYPE:
+Object
+
+RESPONSE:
+The newest user object saved in the backend.
+
+Example:
+{
+name: "Ysabel Bishop",
+email: "[ysabel@gmail.com](mailto:ysabel@example.com)",
+country: "Mexico",
+bio: "Learning full stack development."
+}
+
+❓ WHEN:
+When the Saved Countries page first loads.
+
+❓ WHERE:
+SavedCountries.jsx
+Inside the getNewestUser function and inside useEffect.
+
+❓ HOW:
+
+Step 1: Create a user state variable to store the newest user from the backend.
+
+Step 2: Create a function called getNewestUser.
+
+Step 3: Inside getNewestUser, send a GET request to /api/get-newest-user.
+
+Step 4: Convert the response into JavaScript data using response.json().
+
+Step 5: Save the returned user data in the user state.
+
+Step 6: Call getNewestUser inside useEffect so it runs when the Saved Countries page loads.
+
+Step 7: In the JSX, check if a user exists.
+
+Step 8: If a user exists, render “Welcome back, [user name]!” above the form.
+
+❓ WHAT...
+
+TYPE OF HTTP REQUEST (GET OR POST):
+POST
+
+API ENDPOINT:
+/api/save-one-country
+
+REQUEST BODY DATA TYPE (if applicable):
+Object
+
+REQUEST BODY (if applicable):
+The selected country object.
+
+Example:
+{
+name: {
+common: "Afghanistan"
+},
+cca3: "AFG",
+flags: {
+png: "flag image url",
+svg: "flag image url"
+},
+population: 40218234,
+region: "Asia",
+capital: ["Kabul"],
+borders: ["IRN", "PAK", "TKM"]
+}
+
+RESPONSE DATA TYPE:
+Object
+
+RESPONSE:
+The saved country data or a message confirming that the country was saved.
+
+❓ WHEN:
+When the user is on a Country Detail page and clicks the Save button.
+
+❓ WHERE:
+CountryDetail.jsx
+Inside the saveCountry function.
+
+❓ HOW:
+
+Step 1: Use the countryCode from the URL to find the selected country.
+
+Step 2: Create a saveCountry function.
+
+Step 3: Add a Save button to the Country Detail page.
+
+Step 4: When the Save button is clicked, call the saveCountry function.
+
+Step 5: Inside saveCountry, send a POST request to /api/save-one-country.
+
+Step 6: Send the selectedCountry object in the request body.
+
+Step 7: Convert the response into JavaScript data using response.json() if needed.
+
+Step 8: Show the user a message that the country was saved.
+
+❓ WHAT...
+
+TYPE OF HTTP REQUEST (GET OR POST):
+GET
+
+API ENDPOINT:
+/api/get-all-saved-countries
+
+REQUEST BODY DATA TYPE (if applicable):
+Not applicable
+
+REQUEST BODY (if applicable):
+No request body is needed because this is a GET request.
+
+RESPONSE DATA TYPE:
+Array
+
+RESPONSE:
+An array of saved country objects.
+
+Example:
+[
+{
+name: {
+common: "Afghanistan"
+},
+cca3: "AFG",
+flags: {
+png: "flag image url",
+svg: "flag image url"
+},
+population: 40218234,
+region: "Asia",
+capital: ["Kabul"]
+}
+]
+
+❓ WHEN:
+When the Saved Countries page first loads.
+
+❓ WHERE:
+SavedCountries.jsx
+Inside the getSavedCountries function and inside useEffect.
+
+❓ HOW:
+
+Step 1: Create a savedCountries state variable to store the list of saved countries.
+
+Step 2: Create a function called getSavedCountries.
+
+Step 3: Inside getSavedCountries, send a GET request to /api/get-all-saved-countries.
+
+Step 4: Convert the response into JavaScript data using response.json().
+
+Step 5: Save the returned array of countries in the savedCountries state.
+
+Step 6: Call getSavedCountries inside useEffect so it runs when the Saved Countries page loads.
+
+Step 7: In the JSX, map over the savedCountries array.
+
+Step 8: Render a CountryCard for each saved country.
+
+Step 9: If there are no saved countries, show a message like “No saved countries yet.”
+
+NOTE: We combine storing & retrieving country counts data into one section because they always happen together. Each time we look up a country’s view count, we also need to increase it and save the new total.
+
+❓ WHAT...
+
+TYPE OF HTTP REQUEST (GET OR POST):
+POST
+
+API ENDPOINT:
+/api/increment-country-count
+
+REQUEST BODY DATA TYPE (if applicable):
+Object
+
+REQUEST BODY (if applicable):
+An object with the selected country’s country code and name.
+
+Example:
+{
+cca3: "AFG",
+name: "Afghanistan"
+}
+
+RESPONSE DATA TYPE:
+Object
+
+RESPONSE:
+An object with the updated view count.
+
+Example:
+{
+count: 5
+}
+
+❓ WHEN:
+When the user opens a Country Detail page.
+
+❓ WHERE:
+CountryDetail.jsx
+Inside the updateViewCount function and inside useEffect.
+
+❓ HOW:
+
+Step 1: Use useParams to get the countryCode from the URL.
+
+Step 2: Use the countryCode to find the selected country from countriesData.
+
+Step 3: Create a viewCount state variable to store how many times the country has been viewed.
+
+Step 4: Create a function called updateViewCount.
+
+Step 5: Inside updateViewCount, send a POST request to /api/increment-country-count.
+
+Step 6: Send an object in the request body with the selected country’s cca3 and name.
+
+Step 7: Convert the response into JavaScript data using response.json().
+
+Step 8: Save the returned count in the viewCount state.
+
+Step 9: Call updateViewCount inside useEffect when the selected country is available.
+
+Step 10: Render the view count in the JSX using text like “Viewed: [viewCount] times.”
+
+Step 11: Remove React StrictMode from main.jsx so the view count only increases by 1 instead of 2.
