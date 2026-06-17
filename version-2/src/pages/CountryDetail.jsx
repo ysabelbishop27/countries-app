@@ -1,240 +1,9 @@
-// import { Link, useParams } from "react-router-dom";
-// import { useEffect, useState } from "react";
-
-// function CountryDetail({ countriesData }) {
-//   // Gets the country code from the URL
-//   // countryCode would equal "AFG"
-//   const { countryCode } = useParams();
-
-//   // Stores the number of times this country page has been viewed
-//   const [viewCount, setViewCount] = useState(0);
-
-//   // Finds the country object that matches the country code in the URL
-//   const selectedCountry = countriesData.find((country) => {
-//     return country.cca3 === countryCode;
-//   });
-
-//   // Runs whenever selectedCountry changes
-//   // Once the country is found, we increase its view count 
-//   useEffect(() => {
-//     if (selectedCountry) {
-//       updateViewCount();
-//     }
-//   }, [selectedCountry]);
-
-//   // Sends a POST request to the backend to increase
-//   // the number of views for this country
-//   async function updateViewCount() {
-//     try {
-//       const response = await fetch("/api/increment-country-count", {
-//         method: "POST",
-
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-
-//         // Sends country information to the backend
-//         body: JSON.stringify({
-//           cca3: selectedCountry.cca3,
-//           name: selectedCountry.name.common,
-//         }),
-//       });
-
-//       // Changes the response into JS data
-//       const data = await response.json();
-
-//       // Updates the page with the newest count from the backend
-//       setViewCount(data.count);
-//     } catch (error) {
-//       console.log("Could not update view count:", error);
-//     }
-//   }
-
-//   // Saves the selected country 
-//   async function saveCountry() {
-//     try {
-//       await fetch("/api/save-one-country", {
-//         method: "POST",
-
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-
-//         // Sends the entire country object to the backend
-//         body: JSON.stringify(selectedCountry),
-//       });
-
-//       // Lets the user know the country was saved 
-//       alert(`${selectedCountry.name.common} saved!`);
-//     } catch (error) {
-//       console.log("Could not save country:", error);
-//     }
-//   }
-
-//   // If the country does not exist, show an error message
-//   if (!selectedCountry) {
-//     return <h1>Country not found</h1>;
-//   }
-
-//   return (
-//     <main className="detail-page">
-//       {/* Back button that returns the user to the Home page */}
-//       <Link to="/" className="back-button">
-//         Back
-//       </Link>
-
-//       <section className="detail-card">
-//         {/* Country flag */}
-//         <img
-//           className="detail-flag"
-//           src={
-//             selectedCountry.flags?.svg ||
-//             selectedCountry.flags?.png
-//           }
-//           alt={`${selectedCountry.name.common} flag`}
-//         />
-
-//         {/* Country information */}
-//         <div className="detail-info">
-//           {/* Country name */}
-//           <h1>{selectedCountry.name.common}</h1>
-
-//           {/* Save country button */}
-//           <button onClick={saveCountry}>Save</button>
-
-//           {/* Country details */}
-//           <p>
-//             Population:{" "}
-//             {selectedCountry.population.toLocaleString()}
-//           </p>
-
-//           <p>
-//             Capital:{" "}
-//             {selectedCountry.capital?.[0] || "N/A"}
-//           </p>
-
-//           <p>
-//             Region: {selectedCountry.region}
-//           </p>
-
-//           {/* Shows how many times this page has been viewed */}
-//           <p>
-//             Viewed: {viewCount} times
-//           </p>
-
-//           {/* Border countries section */}
-//           <p>
-//             Bordering countries:{" "}
-//             {selectedCountry.borders?.length
-//               ? selectedCountry.borders.join(", ")
-//               : "None"}
-//           </p>
-//         </div>
-//       </section>
-//     </main>
-//   );
-// }
-
-// export default CountryDetail;
-// import { Link, useParams } from "react-router-dom";
-// import { useEffect, useState } from "react";
-
-// function CountryDetail({ countriesData }) {
-//   const { countryCode } = useParams();
-//   const [viewCount, setViewCount] = useState(0);
-
-//   const selectedCountry = countriesData.find(
-//     (country) => country.cca3 === countryCode
-//   );
-
-//   useEffect(() => {
-//     if (selectedCountry) {
-//       updateViewCount();
-//     }
-//   }, [selectedCountry]);
-
-//   async function updateViewCount() {
-//     try {
-//       const response = await fetch("/api/increment-country-count", {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//           cca3: selectedCountry.cca3,
-//           name: selectedCountry.name.common,
-//         }),
-//       });
-
-//       const data = await response.json();
-//       setViewCount(data.count);
-//     } catch (error) {
-//       console.log("Could not update view count:", error);
-//     }
-//   }
-
-//   async function saveCountry() {
-//     try {
-//       await fetch("/api/save-one-country", {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify(selectedCountry),
-//       });
-
-//       alert(`${selectedCountry.name.common} saved!`);
-//     } catch (error) {
-//       console.log("Could not save country:", error);
-//     }
-//   }
-
-//   if (!selectedCountry) {
-//     return <h1>Country not found</h1>;
-//   }
-
-//   return (
-//     <main className="detail-page">
-//       <Link to="/" className="back-button">
-//         Back
-//       </Link>
-
-//       <section className="detail-card">
-//         <img
-//           className="detail-flag"
-//           src={selectedCountry.flags?.svg || selectedCountry.flags?.png}
-//           alt={`${selectedCountry.name.common} flag`}
-//         />
-
-//         <div className="detail-info">
-//           <h1>{selectedCountry.name.common}</h1>
-
-//           <button onClick={saveCountry}>Save</button>
-
-//           <p>Population: {selectedCountry.population.toLocaleString()}</p>
-//           <p>Capital: {selectedCountry.capital?.[0] || "N/A"}</p>
-//           <p>Region: {selectedCountry.region}</p>
-//           <p>Viewed: {viewCount} times</p>
-//           <p>
-//             Bordering countries:{" "}
-//             {selectedCountry.borders?.length
-//               ? selectedCountry.borders.join(", ")
-//               : "None"}
-//           </p>
-//         </div>
-//       </section>
-//     </main>
-//   );
-// }
-
-// export default CountryDetail;
 
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 function CountryDetail({ countriesData }) {
   // Gets the country code from the URL.
-  // Example: /country/AFG means countryCode is "AFG".
   const { countryCode } = useParams();
 
   // Stores how many times this country has been viewed.
@@ -244,6 +13,13 @@ function CountryDetail({ countriesData }) {
   const selectedCountry = countriesData.find((country) => {
     return country.cca3 === countryCode;
   });
+
+  // This keeps the country name from breaking if the data looks different.
+  const countryName =
+    selectedCountry?.name?.common ||
+    selectedCountry?.name ||
+    selectedCountry?.country_name ||
+    "Unknown Country";
 
   // When the country page loads, increase the view count one time.
   useEffect(() => {
@@ -255,14 +31,13 @@ function CountryDetail({ countriesData }) {
   // Sends a POST request to increase this country's view count.
   async function updateViewCount() {
     try {
-      const response = await fetch("/api/increment-country-count", {
+      const response = await fetch("/api/update-one-country-count", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          cca3: selectedCountry.cca3,
-          name: selectedCountry.name.common,
+          country_name: countryName,
         }),
       });
 
@@ -276,23 +51,27 @@ function CountryDetail({ countriesData }) {
   }
 
   // Saves this country to the backend.
-  async function saveCountry() {
-    try {
-      const response = await fetch("/api/save-one-country", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(selectedCountry),
-      });
+ async function saveCountry() {
+  try {
+    const response = await fetch("/api/save-one-country", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        country_name: countryName,
+      }),
+    });
 
-      await response.json();
+    const data = await response.text();
 
-      alert(`${selectedCountry.name.common} saved!`);
-    } catch (error) {
-      console.log("Could not save country:", error);
-    }
+    console.log("Save country response:", data);
+
+    alert(`${countryName} saved!`);
+  } catch (error) {
+    console.log("Could not save country:", error);
   }
+}
 
   // If the country is not found, show a simple message.
   if (!selectedCountry) {
@@ -316,19 +95,19 @@ function CountryDetail({ countriesData }) {
         <img
           className="detail-flag"
           src={selectedCountry.flags?.svg || selectedCountry.flags?.png}
-          alt={`${selectedCountry.name.common} flag`}
+          alt={`${countryName} flag`}
         />
 
         <div className="detail-info">
-          <h1>{selectedCountry.name.common}</h1>
+          <h1>{countryName}</h1>
 
           <button className="save-button" onClick={saveCountry}>
             Save
           </button>
 
-          <p>Population: {selectedCountry.population.toLocaleString()}</p>
+          <p>Population: {selectedCountry.population?.toLocaleString() || "N/A"}</p>
           <p>Capital: {selectedCountry.capital?.[0] || "N/A"}</p>
-          <p>Region: {selectedCountry.region}</p>
+          <p>Region: {selectedCountry.region || "N/A"}</p>
           <p>Viewed: {viewCount} times</p>
 
           <p className="border-title">Bordering countries:</p>
